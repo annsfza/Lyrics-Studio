@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Authorization - Lyrics Studio Uploader</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<h1>Lyrics Studio Uploader</h1>
+<div id="result"><p>Reading the authorization result...</p></div>
+<p class="muted">This page only shows the result on your screen. Nothing is stored on this website.</p>
+</main>
+<script>
+  // TikTok mengarahkan ke sini dengan ?code=...&state=... setelah tombol "Izinkan" ditekan.
+  // Kode ini ditampilkan untuk disalin ke bot; tidak dikirim ke mana pun dari halaman ini.
+  const params = new URLSearchParams(location.search);
+  const box = document.getElementById("result");
+  const code = params.get("code");
+  if (code) {
+    box.innerHTML =
+      "<p>Authorization succeeded. Copy this code and send it to the bot:</p>" +
+      "<p><code id='code'></code></p>" +
+      "<button id='copy'>Copy code</button>";
+    document.getElementById("code").textContent = code;
+    document.getElementById("copy").onclick = () => navigator.clipboard.writeText(code);
+  } else if (params.get("error")) {
+    box.innerHTML = "<p>Authorization was not completed: <code id='err'></code></p>";
+    document.getElementById("err").textContent = params.get("error_description") || params.get("error");
+  } else {
+    box.innerHTML = "<p>No authorization data found on this page.</p>";
+  }
+</script>
+</body>
+</html>
