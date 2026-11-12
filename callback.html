@@ -15,17 +15,21 @@
 </main>
 <script>
   // TikTok mengarahkan ke sini dengan ?code=...&state=... setelah tombol "Izinkan" ditekan.
-  // Kode ini ditampilkan untuk disalin ke bot; tidak dikirim ke mana pun dari halaman ini.
+  // Halaman ini menyusun perintah siap tempel untuk bot; tidak dikirim ke mana pun dari sini.
   const params = new URLSearchParams(location.search);
   const box = document.getElementById("result");
   const code = params.get("code");
   if (code) {
+    const command = "/tiktok_kode " + code + " " + (params.get("state") || "");
     box.innerHTML =
-      "<p>Authorization succeeded. Copy this code and send it to the bot:</p>" +
-      "<p><code id='code'></code></p>" +
-      "<button id='copy'>Copy code</button>";
-    document.getElementById("code").textContent = code;
-    document.getElementById("copy").onclick = () => navigator.clipboard.writeText(code);
+      "<p>Authorization succeeded. Copy this line and send it to your bot:</p>" +
+      "<p><code id='cmd' style='word-break: break-all'></code></p>" +
+      "<button id='copy'>Copy</button> <span id='copied' class='muted'></span>";
+    document.getElementById("cmd").textContent = command;
+    document.getElementById("copy").onclick = () =>
+      navigator.clipboard.writeText(command).then(() => {
+        document.getElementById("copied").textContent = "Copied!";
+      });
   } else if (params.get("error")) {
     box.innerHTML = "<p>Authorization was not completed: <code id='err'></code></p>";
     document.getElementById("err").textContent = params.get("error_description") || params.get("error");
